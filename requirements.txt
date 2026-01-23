@@ -1,0 +1,21 @@
+# Data Handling & Reporting
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Audio Processing
+pydub>=0.25.1
+librosa>=0.10.0
+
+# API & Networking
+# requests>=2.31.0  <-- Removed AudD requests requirement (optional now)
+requests>=2.31.0
+python-dotenv>=1.0.0
+shazamio>=0.5.0        # Free Shazam API wrapper
+nest_asyncio>=1.5.8    # For handling async loops smoothly
+
+# User Interface (CLI)
+rich>=13.0.0
+tqdm>=4.65.0
+
+# Optional
+black

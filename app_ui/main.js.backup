@@ -1,0 +1,110 @@
+
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const path = require('path');
+const { PythonShell } = require('python-shell');
+
+let mainWindow;
+let currentFilePath = null;
+
+function createWindow() {
+    mainWindow = new BrowserWindow({
+        width: 650,
+        height: 700,
+        titleBarStyle: 'hiddenInset',
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+        backgroundColor: '#111',
+        resizable: false
+    });
+
+    mainWindow.loadFile('index.html');
+}
+
+app.whenReady().then(createWindow);
+
+// IPC: Receive file path (Just Store It)
+ipcMain.on('file-dropped', (event, filePath) => {
+    currentFilePath = filePath;
+    console.log("File Ready:", currentFilePath);
+    event.sender.send('status-update', "FILE READY");
+});
+
+// IPC: Start Scan (Triggered by Button)
+ipcMain.on('start-scan', (event) => {
+    if (!currentFilePath) {
+        event.sender.send('status-update', "ERR: NO FILE LOADED");
+        return;
+    }
+
+    // Send acknowledgement back to UI
+    event.sender.send('status-update', "LOADING TAPE...");
+
+    // Determine path based on if we are running from source or packaged app
+    const scriptPath = app.isPackaged
+        ? path.join(process.resourcesPath, 'src')
+        : path.join(__dirname, '../src');
+
+    let options = {
+        mode: 'text',
+        pythonPath: '/usr/local/bin/python3', // Try this first
+        scriptPath: scriptPath,
+        args: [currentFilePath]
+    };
+
+    let pyshell;
+    try {
+        pyshell = new PythonShell('main.py', options);
+    } catch (e) {
+        event.sender.send('status-update', "ERR: FAILED TO START PYTHON");
+        console.error(e);
+        return;
+    }
+
+    // Listen for critical start-up errors
+    pyshell.on('error', function (err) {
+        console.error("Python Error:", err);
+        event.sender.send('status-update', "ERR: PYTHON CRASHED");
+    });
+
+    pyshell.on('message', function (message) {
+        // Forward progress to UI
+        if (message.startsWith('PROGRESS:')) {
+            let percent = message.split(':')[1].trim();
+            event.sender.send('progress-update', percent);
+        }
+        console.log(message);
+    });
+
+    pyshell.end(function (err, code, signal) {
+        if (err) {
+            console.error("Python Error:", err);
+            let errorMsg = "ERR: " + (err.message || err).toString().substring(0, 30);
+            event.sender.send('status-update', errorMsg.toUpperCase());
+            event.sender.send('vu-active', false);
+        } else {
+            console.log("Python finished");
+            event.sender.send('progress-update', 100);
+            event.sender.send('status-update', "SCAN COMPLETE");
+            event.sender.send('vu-active', false);
+        }
+    });
+
+    event.sender.send('status-update', "PROCESSING...");
+    event.sender.send('vu-active', true);
+});
+
+// IPC: Open Output Folder
+ipcMain.on('open-output', (event) => {
+    // We assume standard project structure: [Project]/output
+    // If packaged, it might be slightly different, but for this user (local build), it's ../output
+    const outputPath = app.isPackaged
+        ? path.join(process.resourcesPath, '../output')
+        : path.join(__dirname, '../output');
+
+    shell.openPath(outputPath).then((err) => {
+        if (err) console.error("Error opening output:", err);
+    });
+});
+

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+audio_segments/*
+output/*
+!audio_segments/.gitkeep
+!output/.gitkeep
+debug.log
+venv/
+**/node_modules/
+debug_chunk.*
+bin/
+**/dist/
+**/build/

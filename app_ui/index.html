@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Radio Compliance - HiFi Edition</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for retro digital look -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="hifi-stack">
+
+        <!-- TOP DECK: CASSETTE INPUT -->
+        <div class="deck deck-top">
+            <!-- Branding Removed for cleaner look -->
+
+            <div class="cassette-door" id="drop-zone">
+                <div class="tape-window">
+                    <div class="reel reel-left"></div>
+                    <div class="tape-label">NO FILE</div>
+                    <div class="reel reel-right"></div>
+                </div>
+                <div class="door-glass"></div>
+            </div>
+
+            <div class="transport-buttons">
+                <button class="btn-metal" id="btn-reset">RESET</button>
+            </div>
+        </div>
+
+        <!-- MID DECK: VISUALIZER & SCREEN -->
+        <div class="deck deck-mid">
+            <div class="vfd-screen">
+                <div class="vfd-row" id="status-text">SYSTEM READY</div>
+                <div class="vfd-row small" id="track-info">DROP AUDIO FILE HERE</div>
+            </div>
+
+            <div class="eq-panel">
+                <!-- 10 EQ Sliders (Visual only for now) -->
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+                <div class="slider">
+                    <div class="knob"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM DECK: AMP & CONTROLS -->
+        <div class="deck deck-bot">
+            <div class="vu-meters">
+                <div class="vu-meter">
+                    <div class="vu-scale"></div>
+                    <div class="vu-needle" id="needle-l"></div>
+                    <div class="vu-backlight"></div>
+                </div>
+                <div class="vu-meter">
+                    <div class="vu-scale"></div>
+                    <div class="vu-needle" id="needle-r"></div>
+                    <div class="vu-backlight"></div>
+                </div>
+            </div>
+
+            <div class="main-controls">
+                <button class="big-switch" id="btn-scan">
+                    <div class="led-indicator"></div>
+                    ANALYZE
+                </button>
+                <div class="volume-knob"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
