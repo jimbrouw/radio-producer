@@ -8,6 +8,21 @@ const needleR = document.getElementById('needle-r');
 const scanBtn = document.getElementById('btn-scan');
 const resetBtn = document.getElementById('btn-reset');
 
+// Browse button — reliable fallback for packaged app file selection
+const browseBtn = document.getElementById('btn-browse');
+if (browseBtn) {
+    browseBtn.addEventListener('click', () => {
+        ipcRenderer.send('browse-files');
+    });
+}
+
+// Handle file-count update from main
+ipcRenderer.on('file-count', (event, count) => {
+    document.querySelector('.tape-label').innerText =
+        count === 1 ? "AUDIO LOADED" : `TAPES LOADED: ${count}`;
+    trackInfo.innerText = "PRESS ANALYZE TO START";
+});
+
 // Drag & Drop Handling
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();

@@ -10,8 +10,13 @@ load_dotenv()
 # Base Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 INPUT_DIR = BASE_DIR / "audio_segments"
-OUTPUT_DIR = BASE_DIR / "output"
-LOG_FILE = BASE_DIR / "debug.log"
+
+# Output: use env var if set (packaged app writes here), else default
+_output_env = os.environ.get("RADIO_OUTPUT_DIR")
+OUTPUT_DIR = Path(_output_env) if _output_env else BASE_DIR / "output"
+
+# Log file alongside output
+LOG_FILE = OUTPUT_DIR / "debug.log"
 
 # Dependency Configuration: Add local bin to PATH for ffmpeg
 os.environ["PATH"] += os.pathsep + str(BASE_DIR / "bin")
